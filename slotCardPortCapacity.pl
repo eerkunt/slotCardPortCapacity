@@ -1,7 +1,7 @@
 #
 #
-# slotCardPortCapacity  -    This script finds and reports physical entities like slot, card and  
-#                            port on given list of NEs. 
+# slotCardPortCapacity  -    This script finds and reports physical entities like slot, card and
+#                            port on given list of NEs.
 #
 # Author            Emre Erkunt
 #                   (emre.erkunt@superonline.net)
@@ -63,7 +63,7 @@ if ($opt{v}) {
 
 my @targets :shared;
 my @ciNames;
-our @ignoreList :shared = ( 'GigabitEthernet0/0/0' ); 
+our @ignoreList :shared = ( 'GigabitEthernet0/0/0' );
 unlink('upgradescpc.bat');
 
 my $time = time();
@@ -74,9 +74,9 @@ $SIG{TERM} = \&interrupt;
 $ua = new LWP::UserAgent;
 my $req = HTTP::Headers->new;
 
-my $svnrepourl  = "http://10.34.219.5/repos/scripts/slotCardPortCapacity/"; # Do not forget the last /
-my $SVNUsername = "scpe";
-my $SVNPassword = "Nx91nV-1!";
+my $svnrepourl  = ""; 												# Your private SVN Repository (should be served via HTTP). Do not forget the last /
+my $SVNUsername = "";													# Your SVN Username
+my $SVNPassword = "";													# Your SVN Password
 my $SVNScriptName = "slotCardPortCapacity.pl";
 my $SVNFinalEXEName = "scpc";
 
@@ -97,7 +97,7 @@ unless ($opt{n}) {
 			$publicVersion = $1;
 		} elsif ( $line =~ /^# $version                 \w+\s+/g ) {
 			$fetchChangelog = 1;
-		} 
+		}
 		if ( $fetchChangelog eq 1 ) { $changelog .= $line."\n"; }
 	}
 	if ( $version ne $publicVersion and length($publicVersion)) {		# SELF UPDATE INITIATION
@@ -164,7 +164,7 @@ my @completed :shared;
 #
 # Beware, dragons beneath here! Go away.
 #
-# Get the Password from STDIN 
+# Get the Password from STDIN
 #
 $opt{p} = read_password('Enter your password : ') unless ($opt{p});
 print "Fetching information from ".scalar @targets." IPs.\n" if ($opt{v});
@@ -206,14 +206,14 @@ while ( $i <= scalar @targets ) {
 			last;
 		}
 	}
-	
+
 	sleep 1;
 	foreach my $thr (@Threads) {
 		if ($thr->is_joinable()) {
 			$thr->join;
 		}
 	}
-	
+
 	last unless ($targets[$i]);
 }
 
@@ -226,7 +226,7 @@ while (scalar @running > 0) {
 		}
 	}
 	@running = threads->list(threads::running);
-}	
+}
 print "\n";
 
 # Dump the data to CSV file that has been collected from Network
@@ -253,7 +253,7 @@ if ( $opt{g} ) {
 	my $maximum = stddev(@newUptimes);
 	# print "OLD STDDEV : $tmpMax\tNEW STDDEV : $maximum\n";
 	my $ringLeader = 3;
-	
+
 	foreach my $key (sort keys %nodes) {
 		my @edgestome = grep /-$key$/, keys %edges;
 		my @edgesfromme = grep /^$key-/, keys %edges;
@@ -261,7 +261,7 @@ if ( $opt{g} ) {
 		my $node = $graph->add_node(''.$key.'');
 		my $namingSuffix = "";
 		my $namingPrefix = "";
-		
+
 		# Check for the Ringleader
 		if ( $myEdgeCount >= $ringLeader ) {
 			$namingSuffix = " **";
@@ -269,7 +269,7 @@ if ( $opt{g} ) {
 		} else {
 			$node->set_attribute('shape', 'rounded');
 		}
-		
+
 		# Check for the UPS Existance
 		my $index;
 		my $myCiName;
@@ -283,13 +283,13 @@ if ( $opt{g} ) {
 				last;
 			}
 		}
-		
+
 		# Add prefix and suffix on the labeling
 		$node->set_attribute('label', ''.$namingPrefix.$key.$namingSuffix.'');
-		
+
 		# $node->set_attribute('fill', $fill{$key}) if ($fill{$key});
 		$node->set_attribute('font', 'Arial');
-		
+
 		# Finding the correct Percentage
 		if ( $nodes{$key} >= $minimum && $nodes{$key} <= $maximum ) {
 			# print "Percentage for $key ($nodes{$key}) is ".gradient($minimum, $maximum, $nodes{$key})."\n";
@@ -302,9 +302,9 @@ if ( $opt{g} ) {
 			}
 			# print "Skipping $key ($nodes{$key}) out of boundaries ( $minimum <=> $maximum ). Gradient might be : ".gradient($minimum, $maximum, $nodes{$key})."\n";
 		}
-		
+
 		$node->set_attribute('fontsize', '80%');
-		
+
 		if ( $links{$key} ) {
 			$node->set_attribute('linkbase', '/');
 			$node->set_attribute('autolink', 'name');
@@ -330,13 +330,13 @@ if ( $opt{g} ) {
 
 	$graph->timeout(600);
 	$graph->catch_warnings(1);					# Disable warnings
-	
+
 	if ( scalar @uptimes <= 200 ) {
 		print "Re-organizing the graph"  if($opt{v});
 		my $max = undef;
 
 		$graph->randomize();
-		my $seed = $graph->seed(); 
+		my $seed = $graph->seed();
 
 		$graph->layout();
 		$max = $graph->score();
@@ -361,7 +361,7 @@ if ( $opt{g} ) {
 	}
 
 	print "Creating graph.\n"  if($opt{v});
-	 
+
 
 	open(GRAPHFILE, "> ".$graphFilename) or die("Can not create graphic file ".$graphFilename);
 	print GRAPHFILE $graph->output();
@@ -377,10 +377,10 @@ print "Process took ".(time()-$time)." seconds with $opt{t} threads.\n"   if($op
 # Related Functions
 #
 sub swirl() {
-	
+
 	my $diff = 1;
-	my $now = time();	
-	
+	my $now = time();
+
 	if ( ( $now - $swirlTime ) gt 1 ) {
 		if    ( $swirlCount%8 eq 0 ) 	{ print "\b|"; $swirlCount++; }
 		elsif ( $swirlCount%8 eq 1 ) 	{ print "\b/"; $swirlCount++; }
@@ -394,25 +394,25 @@ sub swirl() {
 		$swirlTime = $now;
 	}
 	return;
-	
+
 }
 
 sub fetchDataFromNetwork() {
 	my $IP = shift;
-	
+
 	if($opt{v}) {
 		$STDOUT[$i] = "[".($i+1)."] -> $targets[$i] : ";
 	} else {
 		$STDOUT[$i] = ".";
 	}
-	
-	$obj{$IP} = new Net::Telnet ( Timeout => 240 );		# Do not forget to change timeout on new development !!!!!!!!!		
+
+	$obj{$IP} = new Net::Telnet ( Timeout => 240 );		# Do not forget to change timeout on new development !!!!!!!!!
 	$obj{$IP}->errmode("return");
 	if ($obj{$IP}->open($IP)) {
 		$STDOUT[$i] .= "C" if($opt{v});
 		my $vendor = authenticate( $IP, \%opt );
 		$STDOUT[$i] .= "A" if($opt{v});
-		if ( $vendor ) { 
+		if ( $vendor ) {
 			my $prompt;
 			my %interfaceTypes;
 			my @regex;
@@ -442,9 +442,9 @@ sub fetchDataFromNetwork() {
 				$regex[2] = '\s*WaveLength: \d*nm, Transmission Distance: (.*)';
 				$regex[3] = '\s*The Vendor Name is (.*)';
 			}
-			
+
 			$STDOUT[$i] .= "[$ciName] " if($opt{v});
-			
+
 			# Fetch port allocations
 			my @interfaces;
 			my @return = $obj{$IP}->cmd(String => $command[0], Prompt => $prompt);
@@ -466,22 +466,22 @@ sub fetchDataFromNetwork() {
 					print "[$IP ".$gigPortCount."x1G] $1 ==> Slot: $2\tCard: $3\tPort: $4 (1G)\n" if ($opt{debug});
 				} else {
 					# print "[$IP} $line ==> IGNORED\n";
-				}				
+				}
 			}
-			
+
 			$gigPortCount--;
-			
+
 			# Fetch descriptions of related ports
 			my @return = $obj{$IP}->cmd(String => $command[1], Prompt => $prompt);
-			
-			foreach my $line ( @return ) {	
+
+			foreach my $line ( @return ) {
 				chomp($line);
 				foreach my $slot ( sort(keys %ports) ) {
 					# print "[IP] DUMP: /SLOT : $slot\n" if ($opt{debug});
 					foreach my $card ( sort(keys %{$ports{$slot}}) ) {
 						# print "[IP} DUMP: /SLOT/CARD : $card\n" if ($opt{debug});
 						foreach my $port ( sort(keys %{${$ports{$slot}}{$card}}) ) {
-							if ( !in_array(\@ignoreList, ${$ports{$slot}{$card}}{$port}) ) { 
+							if ( !in_array(\@ignoreList, ${$ports{$slot}{$card}}{$port}) ) {
 								my $check = ${$ports{$slot}{$card}}{$port};
 								my $checkReg = $regex[1];
 								$checkReg =~ s/_INTERFACE_/$check/g;
@@ -499,12 +499,12 @@ sub fetchDataFromNetwork() {
 									my $cmd = $command[2];
 									my $change = ${$ports{$slot}{$card}}{$port};
 									$cmd =~ s/_INTERFACE_/$change/g;
-									
+
 									my @return = $obj{$IP}->cmd(String => $cmd, Prompt => $prompt) or die($obj{$IP}->errmsg);
 									my $SFPType, $SFP;
 									my $SFPTypeRegex = $regex[2];
 									my $SFPRegex = $regex[3];
-									
+
 									foreach my $line (@return) {
 										# print "[$IP] DEBUG LINE : $line";
 										if ( $line =~ /$SFPTypeRegex/ ) {
@@ -515,7 +515,7 @@ sub fetchDataFromNetwork() {
 											$SFP = $1;
 										}
 									}
-							
+
 									print "[$IP] SFP on $change : $SFPType ( $SFP )\n" if ( $opt{debug} );
 									$DATA[$i] .= "\"".$SFPType."\";"; undef $SFPType;
 									$DATA[$i] .= "\"".$SFP."\";"; undef $SFP; undef $SFPRegex;
@@ -528,9 +528,9 @@ sub fetchDataFromNetwork() {
 					}
 				}
 			}
-						
+
 			$STDOUT[$i] .= "[ ".($tenGigPortCount + $gigPortCount)." ports ( ".$gigPortCount."x1G + ".$tenGigPortCount."x10G ) ] " if ($opt{v});
-			
+
 		} else {
 			$STDOUT[$i] .= " (Username/Password Problem) " if ($opt{v});
 		}
@@ -539,16 +539,16 @@ sub fetchDataFromNetwork() {
 	} else {
 		$STDOUT[$i] .= "Could not initiate a TCP Session on port 23";
 	}
-	
+
 	print "\b".$STDOUT[$i];
 	print "\n" if ($opt{v});
-	
+
 	return;
 }
 
 sub disconnect() {
 	my $IP			= shift;
-	
+
 	$obj{$IP}->close();
 	return 1;
 }
@@ -556,12 +556,12 @@ sub disconnect() {
 sub authenticate() {
 	my $targetIP = shift;
 	my $opt = shift;
-	
+
 	my @initialCommands;
 	my $vendor;
 	my @prompt;
 	my $timeOut = 5;
-	
+
 	if ($obj{$targetIP}->login( Name => $opt{u}, Password => $opt{p}, Prompt => '/#$/', Timeout => $timeOut ) ) {			# Try for Cisco
 		print "Logged in Cisco!\n" if ($opt{debug});
 		$vendor = "cisco";
@@ -573,15 +573,15 @@ sub authenticate() {
 		$obj{$targetIP}->close();
 		delete $obj{$targetIP};
 		$obj{$targetIP} = new Net::Telnet ( Timeout => 240 ); #, Input_Log => "input.log" ); # , Option_log => "option.log", Dump_Log => "dump.log", Input_Log => "input.log");
-		$obj{$targetIP}->errmode("return");	
+		$obj{$targetIP}->errmode("return");
 		$obj{$targetIP}->open($targetIP);
-		
-		
+
+
 		#
 		# RFC 1037 Hack for stupid Huawei Telnet Service forcing us to use 80 chars width
 		$obj{$targetIP}->option_callback(sub { return; });
         $obj{$targetIP}->option_accept(Do => 31);
-		
+
 		$obj{$targetIP}->telnetmode(0);
         $obj{$targetIP}->put(pack("C9",
 		              255,					# TELNET_IAC
@@ -589,10 +589,10 @@ sub authenticate() {
 		              31, 0, 500, 0, 0,		# TELOPT_NAWS
 		              255,					# TELNET_IAC
 		              240));				# TELNET_SE
-        $obj{$targetIP}->telnetmode(1);	
+        $obj{$targetIP}->telnetmode(1);
 		# idiots..
 		#
-		
+
 		# print "." unless ($opt{debug});
 		if($obj{$targetIP}->login( Name => $opt{u}, Password => $opt{p}, Prompt => '/<.*>$/', Timeout => $timeOut ) ) { 	# Try for Huawei
 			print "Logged in Huawei!\n" if ($opt{debug});
@@ -611,13 +611,13 @@ sub authenticate() {
 			return 0;
 		}
 	}
-	
+
 	# Fixing screen buffering problems
 	for(my $i=0;$i < scalar(@initialCommands);$i++) {
 		print "Running '$initialCommands[$i]' with prompt $prompt[$i] : " if ($opt{debug});
 		$obj{$targetIP}->cmd(String => $initialCommands[$i], Prompt => $prompt[$i]);
 		print "Ok!\n" if ($opt{debug});
-	}		
+	}
 	return $vendor;
 }
 
@@ -626,7 +626,7 @@ sub runRemoteCommand( $ $ $ $ ) {
 	my $cmd = shift;
 	my $prompt = shift;
 	my $regex = shift;
-	
+
 	print "Running CMD : $cmd with prompt $prompt ( filter with : $regex )\n"  if ( $opt{debug} );
 	my @return = $object->cmd(String => $cmd, Prompt => $prompt) or die($object->errmsg);
 	foreach my $line (@return) {
@@ -635,7 +635,7 @@ sub runRemoteCommand( $ $ $ $ ) {
 			print "Match Regex : $1\n" if ( $opt{debug} );
 			return $1;
 		}
-	}	
+	}
 }
 
 sub uniq {
@@ -647,7 +647,7 @@ sub gradient {
     my $min = shift;
 	my $max = shift;
 	my $num = shift;
-	
+
     my $middle = ( $min + $max ) / 2;
     my $scale = 255 / ( $middle - $min );
 
@@ -663,13 +663,13 @@ sub gradient {
 
 sub in_array {
      my ($arr,$search_for) = @_;
-     my %items = map {$_ => 1} @$arr; 
+     my %items = map {$_ => 1} @$arr;
      return (exists($items{$search_for}))?1:0;
 }
- 
+
 sub usage {
 		my $usageText = << 'EOF';
-	
+
 This script finds and reports physical entities like slot, card and  port on given list of NEs.
 
 Author            Emre Erkunt
