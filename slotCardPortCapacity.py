@@ -17,12 +17,11 @@ Version             Contributer         Date            Description
 0.1.1 Beta          eerkunt             20151123        First port from Perl script to Python
 0.1.1               eerkunt             20161125        Initial Python Release
 0.1.2               eerkunt             20161125        Changed defDelimeter and fixed a typo about delimeter on SFPs
+0.1.3               eerkunt             20161125        Forgot to add bandwidth into CSV output. Fixed it.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TO-DO :
 - Terminal Coloring & beautify
-- Progress bar implementation
-- Shared Memory usage between threads
 '''
 
 sys.stdout.flush()
@@ -32,7 +31,7 @@ __author__ = "Emre Erkunt"
 __copyright__ = "Copyright 2015, Emre Erkunt"
 __credits__ = []
 __license__ = "GPL"
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 __maintainer__ = "Emre Erkunt"
 __email__ = "emre.erkunt at gmail.com"
 __status__ = "Development"
@@ -196,6 +195,7 @@ for target in resultArray:
                     output += "\"" + str(target[2][slot][card][port]['SFPRange']) + "\"" + delim
                 else:
                     output += "\"\"" + delim + "\"\"" + delim
+                output += "\"" + str(target[2][slot][card][port]['bandwidth']) + "G\"" + delim
                 output += "\"" + str(target[2][slot][card][port]['status']) + "\"" + delim
                 output += "\"" + str(target[2][slot][card][port]['description']) + "\"\n"
                 args.outputFile.write(output)
