@@ -102,7 +102,7 @@ if (len(targets) < args.threads):
 print "Running with " + str(args.threads) + " threads."
 logging.info("Multi-threading initiated with " + str(args.threads) + " threads.")
 
-delimeter = ","
+delimeter = args.delimeter
 headerTxt = ["\"CI Name\"", "\"IP Address\"", "\"Slot\"", "\"Card\"", "\"Port\"", "\"SFP Type\"", "\"SFP Vendor\"",
              "\"Bandwidth\"", "\"State\"", "\"Description\""]
 delim = delimeter + " "
