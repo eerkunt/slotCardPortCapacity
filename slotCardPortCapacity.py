@@ -19,9 +19,6 @@ Version             Contributer         Date            Description
 0.1.2               eerkunt             20161125        Changed defDelimeter and fixed a typo about delimeter on SFPs
 0.1.3               eerkunt             20161125        Forgot to add bandwidth into CSV output. Fixed it.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-TO-DO :
-- Terminal Coloring & beautify
 '''
 
 sys.stdout.flush()
