@@ -16,6 +16,7 @@ Version             Contributer         Date            Description
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 0.1.1 Beta          eerkunt             20151123        First port from Perl script to Python
 0.1.1               eerkunt             20161125        Initial Python Release
+0.1.2               eerkunt             20161125        Changed defDelimeter and fixed a typo about delimeter on SFPs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TO-DO :
@@ -31,14 +32,14 @@ __author__ = "Emre Erkunt"
 __copyright__ = "Copyright 2015, Emre Erkunt"
 __credits__ = []
 __license__ = "GPL"
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __maintainer__ = "Emre Erkunt"
 __email__ = "emre.erkunt at gmail.com"
 __status__ = "Development"
 
 # Defaults
 defOutputFile = "output.csv"
-defDelimeter = ","
+defDelimeter = ";"
 defSsoIP = "10.35.175.1"
 defPort = 2222
 defThreads = 5
@@ -191,8 +192,8 @@ for target in resultArray:
                 output += "\"" + str(slot) + "\"" + delim + "\"" + str(card) + "\"" + delim + "\"" + str(
                     port) + "'" + delim
                 if "SFPType" in target[2][slot][card][port]:
-                    output += "\"" + str(target[2][slot][card][port]['SFPType']) + "'" + delim
-                    output += "\"" + str(target[2][slot][card][port]['SFPRange']) + "'" + delim
+                    output += "\"" + str(target[2][slot][card][port]['SFPType']) + "\"" + delim
+                    output += "\"" + str(target[2][slot][card][port]['SFPRange']) + "\"" + delim
                 else:
                     output += "\"\"" + delim + "\"\"" + delim
                 output += "\"" + str(target[2][slot][card][port]['status']) + "\"" + delim
