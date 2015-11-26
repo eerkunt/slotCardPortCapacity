@@ -20,6 +20,11 @@ Version             Contributer         Date            Description
 0.1.3               eerkunt             20161125        Forgot to add bandwidth into CSV output. Fixed it.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
+#todo Beautify with terminal colors who is already supported with Win32 Terminal, OSX and Linux.
+#todo Make -p arg as non-mandatory and ask it with Asterix if did not provided
+#todo show some swirling or any progress from other threads while in discovery if possible.
+#todo keyboard interrupts
+
 
 sys.stdout.flush()
 
