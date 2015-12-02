@@ -8,27 +8,11 @@ import sys
 import __builtin__
 import getpass
 
-'''
 ### slotCardPortCapacity Script for discovering physical data from network via SSH ( with or w/out a Proxy Server ) ###
-
-History:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Version             Contributer         Date            Description
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-0.1.1 Beta          eerkunt             20151123        First port from Perl script to Python
-0.1.1               eerkunt             20161125        Initial Python Release
-0.1.2               eerkunt             20161125        Changed defDelimeter and fixed a typo about delimeter on SFPs
-0.1.3               eerkunt             20161125        Forgot to add bandwidth into CSV output. Fixed it.
-0.1.4               eerkunt             20161126        Reading password from prompt if -p/--password not given
-                                                        CTRL+C Interruption implemented
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
 # todo Beautify with terminal colors who is already supported with Win32 Terminal, OSX and Linux.
 # todo show some swirling or any progress from other threads while in discovery if possible.
 # todo keyboard interrupts
 # todo LPU implementation for slots
-# todo Gigabit/TenGigabit problem. Check email.
-# Jenkins Build Test
 
 sys.stdout.flush()
 
@@ -37,7 +21,7 @@ __author__ = "Emre Erkunt"
 __copyright__ = "Copyright 2015, Emre Erkunt"
 __credits__ = []
 __license__ = "GPL"
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 __maintainer__ = "Emre Erkunt"
 __email__ = "emre.erkunt at gmail.com"
 __status__ = "Development"

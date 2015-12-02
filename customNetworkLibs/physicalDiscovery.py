@@ -144,7 +144,7 @@ def discover(hostname):
                                     card=matches[3],
                                     port=matches[4],
                                     key="bandwidth",
-                                    value=1 )
+                                    value=10 )
                     tenGigPorts += 1
                 else:
                     logging.debug( "[" +target. hostname + "] Skipping " +matches[1 ] +" as it is in ignored list.")
