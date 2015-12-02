@@ -4,7 +4,7 @@ import re
 import socket
 
 class customSSH:
-    def __init__( self, host, port, user, passwd, target ):
+    def __init__( self, host, port, user, passwd, target = None ):
         self.prompts = {
             "cisco":    ("#"),
             "huawei":   (">","]", "[Y/N]:"),
@@ -82,6 +82,8 @@ class customSSH:
             raise ValueError("Authentication failure on SSO Server!")
         except socket.timeout:
             raise ValueError("Timed out on "+host+" / "+target+" !!")
+        except socket.error:
+            raise ValueError("Connection refused on "+verboseMessage)
 
     def fetchData( self, cmd, regex = None ):
         logging.info("["+self.hostname+"] # "+str(cmd)+" with "+str(self.prompts[self.vendorName]))

@@ -6,6 +6,7 @@ import os
 import argparse
 import sys
 import __builtin__
+import getpass
 
 '''
 ### slotCardPortCapacity Script for discovering physical data from network via SSH ( with or w/out a Proxy Server ) ###
@@ -18,13 +19,15 @@ Version             Contributer         Date            Description
 0.1.1               eerkunt             20161125        Initial Python Release
 0.1.2               eerkunt             20161125        Changed defDelimeter and fixed a typo about delimeter on SFPs
 0.1.3               eerkunt             20161125        Forgot to add bandwidth into CSV output. Fixed it.
+0.1.4               eerkunt             20161126        Reading password from prompt if -p/--password not given
+                                                        CTRL+C Interruption implemented
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
-#todo Beautify with terminal colors who is already supported with Win32 Terminal, OSX and Linux.
-#todo Make -p arg as non-mandatory and ask it with Asterix if did not provided
-#todo show some swirling or any progress from other threads while in discovery if possible.
-#todo keyboard interrupts
-
+# todo Beautify with terminal colors who is already supported with Win32 Terminal, OSX and Linux.
+# todo show some swirling or any progress from other threads while in discovery if possible.
+# todo keyboard interrupts
+# todo LPU implementation for slots
+# todo Gigabit/TenGigabit problem. Check email.
 
 sys.stdout.flush()
 
@@ -33,7 +36,7 @@ __author__ = "Emre Erkunt"
 __copyright__ = "Copyright 2015, Emre Erkunt"
 __credits__ = []
 __license__ = "GPL"
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 __maintainer__ = "Emre Erkunt"
 __email__ = "emre.erkunt at gmail.com"
 __status__ = "Development"
@@ -55,7 +58,7 @@ parser = argparse.ArgumentParser(prog=__progName__,
                                  description="This scripts reads a list of IPs and fetches physical inventory data via Single Sign On Server")
 parser.add_argument("--username", "-u", dest='sshUser', metavar='USERNAME', nargs='?', required=True,
                     help="Username that is required to connect SSO or NE")
-parser.add_argument("--password", "-p", dest='sshPass', metavar='PASSWORD', nargs='?', required=True,
+parser.add_argument("--password", "-p", dest='sshPass', metavar='PASSWORD', nargs='?',
                     help="Password that is required to connect SSO or NE")
 parser.add_argument("--port", "-P", dest='sshPort', metavar='PORT', nargs='?', default=defPort,
                     help="TCP Port that will be used for SSH. Default : " + str(defPort) + " (via SSO)")
@@ -83,6 +86,9 @@ if os.access(args.inputFile.name, os.R_OK) is False:
 if os.access(args.outputFile.name, os.W_OK) is False:
     print "Can not write into " + args.outputFile.name
     exit(-1)
+
+if args.sshPass is None:
+    args.sshPass = getpass.getpass("Password: ")
 
 targets = args.inputFile.readlines()
 
@@ -146,34 +152,52 @@ class ActivePool(object):
             pbar.update(self.targetsDown)
 
 
-def worker(s, pool, target):
+def worker(s, pool, target, events):
     global resultArray
-    # print 'Waiting to join the pool'
-    with s:
-        name = threading.currentThread().getName()
-        pool.createThread(name)
-        try:
-            resultArray.append(physicalDiscovery.discover( target ))
-        except:
-            return
 
-        pool.killThread(name)
+    if events.is_set():
+        # print 'Waiting to join the pool'
+        with s:
+            name = threading.currentThread().getName()
+            pool.createThread(name)
+            try:
+                resultArray.append(physicalDiscovery.discover( target ))
+            except KeyboardInterrupt:
+                print "Quitting"
+            except:
+                return
+
+            pool.killThread(name)
 
 pool = ActivePool()
+events = threading.Event()
+events.set()
 s = threading.Semaphore( args.threads )
 widgets = ['Gathering Data : ', Percentage(),' ',Bar(marker="#"),' [Processing '+str(len(targets)-pool.targetsDown)+' NEs]']
 print "Discovery Started. Wait for a bit for progress..\n"
 pbar = ProgressBar(widgets=widgets, maxval=len(targets)).start()
 for target in targets:
-    t = threading.Thread(target=worker, name=str(target.strip()), args=(s, pool, target.strip() ))
+    t = threading.Thread(target=worker, name=str(target.strip()), args=(s, pool, target.strip(), events ))
     t.start()
-t.join()
-while threading.activeCount()>1:
-    for thread in threading.enumerate():
-        try:
-            thread.join()
-        except:
-            pass
+
+try:
+    t.join(1)
+    time.sleep(1)
+except (KeyboardInterrupt, SystemExit):
+    print "Finishing.."
+    events.clear()
+    sys.exit(0)
+
+if events.is_set():
+    while threading.activeCount()>1:
+        for thread in threading.enumerate():
+            try:
+                thread.join(1)
+            except (KeyboardInterrupt, SystemExit):
+                events.clear()
+                print "Finishing.."
+            except:
+                pass
 ''' Multithreading finishes here '''
 
 ''' Dump inventory data into the CSV file '''
