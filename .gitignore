@@ -9,5 +9,8 @@ app.log
 
 target.list
 
-
 *.csv
+
+!slotCardPortCapacity.exe
+
+!dist/*
