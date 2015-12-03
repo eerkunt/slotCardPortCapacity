@@ -184,7 +184,7 @@ if events.is_set():
 
 ''' Dump inventory data into the CSV file '''
 print "\n\nDiscovery finished."
-print resultArray
+# print resultArray
 
 print "Writing data collected from "+str(len(resultArray))+" NEs into "+ args.outputFile.name
 for target in resultArray:
