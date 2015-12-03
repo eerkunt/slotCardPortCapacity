@@ -2,6 +2,8 @@ History:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Version             Contributer         Date            Description
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+0.1.6               eerkunt             20161203        Changed output concatenation methodology
+                                                        Discovering Card Types and Control Card Types in Slots if exist
 0.1.5               eerkunt             20161202        Fixed a problem with 1G/10G port identification
 0.1.4               eerkunt             20161126        Reading password from prompt if -p/--password not given
                                                         CTRL+C Interruption implemented

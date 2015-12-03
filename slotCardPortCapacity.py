@@ -12,7 +12,6 @@ import getpass
 # todo Beautify with terminal colors who is already supported with Win32 Terminal, OSX and Linux.
 # todo show some swirling or any progress from other threads while in discovery if possible.
 # todo keyboard interrupts
-# todo LPU implementation for slots
 
 sys.stdout.flush()
 
@@ -21,7 +20,7 @@ __author__ = "Emre Erkunt"
 __copyright__ = "Copyright 2015, Emre Erkunt"
 __credits__ = []
 __license__ = "GPL"
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 __maintainer__ = "Emre Erkunt"
 __email__ = "emre.erkunt at gmail.com"
 __status__ = "Development"
@@ -61,7 +60,7 @@ parser.add_argument("--threads", "-t", dest='threads', metavar='THREADS', nargs=
 parser.parse_args(namespace=args)
 
 # You need to declare logging otherwise it won't work :)
-logging.basicConfig(filename='app.log', filemode='a', level=logging.INFO,
+logging.basicConfig(filename='app.log', filemode='a', level=logging.DEBUG,
                     format='%(asctime)s [%(name)s] %(levelname)s (%(threadName)-10s): %(message)s')
 
 if os.access(args.inputFile.name, os.R_OK) is False:
@@ -96,7 +95,7 @@ print "Running with " + str(args.threads) + " threads."
 logging.info("Multi-threading initiated with " + str(args.threads) + " threads.")
 
 delimeter = args.delimeter
-headerTxt = ["\"CI Name\"", "\"IP Address\"", "\"Slot\"", "\"Card\"", "\"Port\"", "\"SFP Type\"", "\"SFP Vendor\"",
+headerTxt = ["\"CI Name\"", "\"IP Address\"", "\"Slot\"", "\"Card Type\"", "\"Control Card Type\"", "\"Card\"", "\"Port\"", "\"SFP Type\"", "\"SFP Vendor\"",
              "\"Bandwidth\"", "\"State\"", "\"Description\""]
 delim = delimeter + " "
 headerRow = delim.join(headerTxt) + "\n"
@@ -149,8 +148,6 @@ def worker(s, pool, target, events):
                 resultArray.append(physicalDiscovery.discover( target ))
             except KeyboardInterrupt:
                 print "Quitting"
-            except:
-                return
 
             pool.killThread(name)
 
@@ -187,29 +184,45 @@ if events.is_set():
 
 ''' Dump inventory data into the CSV file '''
 print "\n\nDiscovery finished."
+print resultArray
+
 print "Writing data collected from "+str(len(resultArray))+" NEs into "+ args.outputFile.name
 for target in resultArray:
     sys.stdout.write("--> " + str(target[0])+" ("+target[1]+") [")
     for slot in target[2]:
-        for card in target[2][slot]:
+        for card in target[2][slot]["cards"]:
             sys.stdout.write(".")
-            for port in target[2][slot][card]:
+            for port in target[2][slot]["cards"][card]:
                 card = str(card)
                 slot = str(slot)
                 port = str(port)
-                output = "\"" + str(target[1]) + "\"" + delim
-                output += "\"" + str(target[0]) + "\"" + delim
-                output += "\"" + str(slot) + "\"" + delim + "\"" + str(card) + "\"" + delim + "\"" + str(
-                    port) + "'" + delim
-                if "SFPType" in target[2][slot][card][port]:
-                    output += "\"" + str(target[2][slot][card][port]['SFPType']) + "\"" + delim
-                    output += "\"" + str(target[2][slot][card][port]['SFPRange']) + "\"" + delim
+                output = list()
+                output.append(target[1])
+                output.append(target[0])
+                output.append(slot)
+
+                if "Card" in target[2][slot]:
+                    output.append(target[2][slot]["Card"])
                 else:
-                    output += "\"\"" + delim + "\"\"" + delim
-                output += "\"" + str(target[2][slot][card][port]['bandwidth']) + "G\"" + delim
-                output += "\"" + str(target[2][slot][card][port]['status']) + "\"" + delim
-                output += "\"" + str(target[2][slot][card][port]['description']) + "\"\n"
-                args.outputFile.write(output)
+                    output.append("")
+
+                if "ControlCard" in target[2][slot]:
+                    output.append(target[2][slot]["ControlCard"])
+                else:
+                    output.append("")
+
+                output.append(card)
+                output.append(port)
+                if "SFPType" in target[2][slot]['cards'][card][port]:
+                    output.append("'"+target[2][slot]['cards'][card][port]['SFPType']+"'")
+                    output.append(target[2][slot]['cards'][card][port]['SFPRange'])
+                else:
+                    output.append("")
+                    output.append("")
+                output.append(str(target[2][slot]['cards'][card][port]['bandwidth']) + "G")
+                output.append(target[2][slot]['cards'][card][port]['status'])
+                output.append("'"+target[2][slot]['cards'][card][port]['description']+"'")
+                args.outputFile.write(delim.join(output)+"\n")
     sys.stdout.write("]\n")
 logging.info("All finished.")
 print "\nAll finished.\n"
