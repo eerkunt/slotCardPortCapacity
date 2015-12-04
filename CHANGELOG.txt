@@ -2,6 +2,8 @@ History:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Version             Contributer         Date            Description
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+0.1.7               eerkunt             20160204        Minor fix on killing a thread
+                                                        Optimized code in output creation
 0.1.6               eerkunt             20161203        Changed output concatenation methodology
                                                         Discovering Card Types and Control Card Types in Slots if exist
 0.1.5               eerkunt             20161202        Fixed a problem with 1G/10G port identification

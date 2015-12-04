@@ -20,7 +20,7 @@ __author__ = "Emre Erkunt"
 __copyright__ = "Copyright 2015, Emre Erkunt"
 __credits__ = []
 __license__ = "GPL"
-__version__ = "0.1.6"
+__version__ = "0.1.7"
 __maintainer__ = "Emre Erkunt"
 __email__ = "emre.erkunt at gmail.com"
 __status__ = "Development"
@@ -37,7 +37,7 @@ maxThreads = 20
 class argHandling(object):
     pass
 
-args = argHandling();
+args = argHandling()
 parser = argparse.ArgumentParser(prog=__progName__,
                                  description="This scripts reads a list of IPs and fetches physical inventory data via Single Sign On Server")
 parser.add_argument("--username", "-u", dest='sshUser', metavar='USERNAME', nargs='?', required=True,
@@ -196,32 +196,25 @@ for target in resultArray:
                 card = str(card)
                 slot = str(slot)
                 port = str(port)
-                output = list()
-                output.append(target[1])
-                output.append(target[0])
-                output.append(slot)
 
-                if "Card" in target[2][slot]:
-                    output.append(target[2][slot]["Card"])
-                else:
-                    output.append("")
-
-                if "ControlCard" in target[2][slot]:
-                    output.append(target[2][slot]["ControlCard"])
-                else:
-                    output.append("")
+                output = [target[1], target[0], slot]
+                slotElements = ["Card", "ControlCard"]
+                for element in slotElements:
+                    if element in target[2][slot]:
+                        output.append(target[2][slot][element])
+                    else:
+                        output.append("")
 
                 output.append(card)
                 output.append(port)
-                if "SFPType" in target[2][slot]['cards'][card][port]:
-                    output.append("'"+target[2][slot]['cards'][card][port]['SFPType']+"'")
-                    output.append(target[2][slot]['cards'][card][port]['SFPRange'])
-                else:
-                    output.append("")
-                    output.append("")
-                output.append(str(target[2][slot]['cards'][card][port]['bandwidth']) + "G")
-                output.append(target[2][slot]['cards'][card][port]['status'])
-                output.append("'"+target[2][slot]['cards'][card][port]['description']+"'")
+
+                portElements = ["SFPType", "SFPRange", "bandwidth", "status", "description"]
+                for element in portElements:
+                    if element in target[2][slot]['cards'][card][port]:
+                        output.append(target[2][slot]['cards'][card][port][element])
+                    else:
+                        output.append("")
+
                 args.outputFile.write(delim.join(output)+"\n")
     sys.stdout.write("]\n")
 logging.info("All finished.")

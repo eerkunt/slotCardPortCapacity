@@ -3,6 +3,7 @@ import logging
 import re
 import __builtin__
 import multiprocessing
+import sys
 
 ssoServer = __builtin__.ssoServer
 sshCredentials = __builtin__.sshCredentials
@@ -81,7 +82,7 @@ def discover(hostname):
                                      sshCredentials["password"], hostname)
     except ValueError as err:
         print "ERROR: " + err.args[0]
-        exit(0)
+        sys.exit(0)
     STDOUT += "[" + target.hostname + "] [" + target.vendorName + "] "
 
     ciName = target.fetchData(commandSet[target.vendorName][0], regexSet[target.vendorName][0])
