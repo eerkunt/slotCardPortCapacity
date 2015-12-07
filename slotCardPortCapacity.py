@@ -20,7 +20,7 @@ __author__ = "Emre Erkunt"
 __copyright__ = "Copyright 2015, Emre Erkunt"
 __credits__ = []
 __license__ = "GPL"
-__version__ = "0.1.7"
+__version__ = "0.1.8"
 __maintainer__ = "Emre Erkunt"
 __email__ = "emre.erkunt at gmail.com"
 __status__ = "Development"
@@ -60,7 +60,7 @@ parser.add_argument("--threads", "-t", dest='threads', metavar='THREADS', nargs=
 parser.parse_args(namespace=args)
 
 # You need to declare logging otherwise it won't work :)
-logging.basicConfig(filename='app.log', filemode='a', level=logging.DEBUG,
+logging.basicConfig(filename='app.log', filemode='a', level=logging.INFO,
                     format='%(asctime)s [%(name)s] %(levelname)s (%(threadName)-10s): %(message)s')
 
 if os.access(args.inputFile.name, os.R_OK) is False:

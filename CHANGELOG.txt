@@ -2,6 +2,7 @@ History:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Version             Contributer         Date            Description
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+0.1.8               eerkunt             20160204        Changed logging facility from DEBUG to INFO
 0.1.7               eerkunt             20160204        Minor fix on killing a thread
                                                         Optimized code in output creation
 0.1.6               eerkunt             20161203        Changed output concatenation methodology
